@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Infected Area Detection</title>
+</head>
+<body>
+<h1>Image pls!</h1>
+<form action="{{url_for('predict')}}" method="post">
+    <label>Upload your Image:</label>
+    <input type="file" name="image" id="image">
+    <br>
+    <button type="submit">Submit</button>
+
+</form>
+{{output_image}}
+<form action="{{url_for('predict2')}}" >
+    <button type="submit">take image</button>
+<!--<input type="submit" name="img">-->
+</form>
+{{img2}}
+</body>
+</html>

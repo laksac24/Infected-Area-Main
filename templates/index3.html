@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Infected Area Detection</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding-top: 50px;
+      }
+      .container {
+        max-width: 500px;
+        margin: auto;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container shadow-lg p-5 bg-white rounded">
+      <h1 class="text-primary">Infected Area Detection</h1>
+
+      <!-- Image Upload Form -->
+      <form
+        action="{{url_for('predict')}}"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div class="form-group">
+          <label for="image" class="font-weight-bold">Upload your Image:</label>
+          <input
+            type="file"
+            class="form-control-file"
+            name="image"
+            id="image"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+      </form>
+
+      <!-- Display the processed image -->
+      <div class="mt-4 text-center">{{output_image}}</div>
+
+      <!-- Take Image using Camera -->
+      <form action="{{url_for('predict2')}}" class="mt-3">
+        <button type="submit" class="btn btn-secondary btn-block">
+          Take Image
+        </button>
+      </form>
+
+      <!-- Display second image -->
+      <div class="mt-4 text-center">{{img2}}</div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
