@@ -12,7 +12,7 @@ class YOLO_Pred():
 
         self.labels=data_yaml['names']
         
-        self.yolo=cv2.dnn.readNetFromONNX('C:/Users/DELL/OneDrive/Desktop/plantDP2.0/data_preparation/predictions/Model2/weights/best.onnx')
+        self.yolo=cv2.dnn.readNetFromONNX('C:/Users/DELL/OneDrive/Desktop/render dp/Model2/weights/best.onnx')
         self.yolo.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         self.yolo.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
         

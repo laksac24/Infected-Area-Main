@@ -14,7 +14,7 @@ class YOLO_Pred2():
 
         self.labels=data_yaml['names']
         
-        self.yolo=cv2.dnn.readNetFromONNX('C:/Users/DELL/OneDrive/Desktop/plantDP2.0/data_preparation/predictions/Model2/weights/best.onnx')
+        self.yolo=cv2.dnn.readNetFromONNX('C:/Users/DELL/OneDrive/Desktop/render dp/Model2/weights/best.onnx')
         self.yolo.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         self.yolo.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
         
@@ -50,7 +50,7 @@ class YOLO_Pred2():
                     break
         cap.release()
         cv2.destroyAllWindows()
-        folder_path = 'C:/Users/DELL/OneDrive/Desktop/plantDP2.0/data_preparation/predictions/trial_images/leaves'
+        folder_path = 'C:/Users/DELL/OneDrive/Desktop/render dp/trial_images/leaves'
 
         # List all files in the folder
         files = os.listdir(folder_path)
@@ -68,7 +68,7 @@ class YOLO_Pred2():
                 
                 # Rename the file
                 os.rename(old_file_path, new_file_path)
-        img=cv2.imread('C:/Users/DELL/OneDrive/Desktop/plantDP2.0/data_preparation/predictions/trial_images/leaves/img1.jpg')
+        img=cv2.imread('C:/Users/DELL/OneDrive/Desktop/render dp/trial_images/leaves/img1.jpg')
         image=img.copy()
         # cv2.imshow('image',image)
         # cv2.waitKey(0)

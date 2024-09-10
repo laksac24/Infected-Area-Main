@@ -6,8 +6,8 @@ import pandas as pd
 
 app=Flask(__name__)
 
-yolo=YOLO_Pred('C:/Users/DELL/OneDrive/Desktop/plantDP2.0/data_preparation/predictions/Model2/weights/best.onnx','data.yaml')
-yolo2=YOLO_Pred2('C:/Users/DELL/OneDrive/Desktop/plantDP2.0/data_preparation/predictions/Model2/weights/best.onnx','data.yaml')
+yolo=YOLO_Pred('C:/Users/DELL/OneDrive/Desktop/render dp/Model2/weights/best.onnx','data.yaml')
+yolo2=YOLO_Pred2('C:/Users/DELL/OneDrive/Desktop/render dp/Model2/weights/best.onnx','data.yaml')
 
 @app.route("/")
 def index():
