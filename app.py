@@ -1,53 +1,64 @@
 import cv2
 import numpy as np
 from functions import YOLO_Pred
-from flask import Flask, render_template, request
-from functions2 import YOLO_Pred2
+from flask import Flask, render_template, request, flash
 import pandas as pd
 import base64
+import logging
+from werkzeug.utils import secure_filename
+import os
 
+app = Flask(__name__)
+app.secret_key = 'supersecretkey'
+logging.basicConfig(level=logging.INFO)
 
-app=Flask(__name__)
+yolo = YOLO_Pred('./Model2/weights/best.onnx', 'data.yaml')
 
-yolo=YOLO_Pred('./Model2/weights/best.onnx','data.yaml')
-yolo2=YOLO_Pred2('./Model2/weights/best.onnx','data.yaml')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def process_image(image):
+    try:
+        img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_COLOR)
+        img_pred = yolo.predictions(img)
+        _, img_encoded = cv2.imencode('.jpg', img_pred)
+        img_base64 = base64.b64encode(img_encoded).decode('utf-8')
+        return img_base64
+    except Exception as e:
+        logging.error(f"Error processing image: {e}")
+        return None
 
 @app.route("/")
 def index():
-    return render_template("index4.html")
+    return render_template("index.html")
 
 @app.route("/predict", methods=['GET', 'POST'])
 def predict():
     if request.method == 'POST':
-        image = request.files.get('image')
-        print(image)
-        if image:
-            img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_COLOR)
-            img_pred = yolo.predictions(img)
-            _, img_encoded = cv2.imencode('.jpg', img_pred)
-            img_base64 = base64.b64encode(img_encoded).decode('utf-8')
-            return render_template("index4.html", output_image=img_base64)
-    return render_template("index4.html")
+        if 'image' not in request.files:
+            flash('No file part')
+            return render_template("index.html")
+        
+        image = request.files['image']
+        
+        if image.filename == '':
+            flash('No selected file')
+            return render_template("index.html")
+        
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
+            logging.info(f"Processing file: {filename}")
+            img_base64 = process_image(image)
+            if img_base64:
+                return render_template("index.html", output_image=img_base64)
+            else:
+                flash('Error processing image')
+        else:
+            flash('Invalid file type')
+    
+    return render_template("index7.html")
 
-@app.route("/predict2",methods=['GET','POST'])
-def predict2():
-    result=yolo2.predictions2()
-    def output2(main_img2):
-        cv2.imshow('Plant_Prediction', main_img2)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-    return(render_template("index4.html",img2=output2(result)))
-
-
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(debug=True)
-
-# img=cv2.imread('./img1.JPG')
-# cv2.imshow('img',img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-#
-# img_pred=yolo.predictions(img)
-# cv2.imshow('predictions',img_pred)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()

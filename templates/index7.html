@@ -50,11 +50,12 @@
         <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title">Take Image using Camera</h5>
-                <video id="video" class="img-fluid" autoplay></video>
+                <button id="openCamera" class="btn btn-success btn-block">Open Camera</button>
+                <video id="video" class="img-fluid" autoplay style="display:none;"></video>
                 <canvas id="canvas" class="img-fluid" style="display:none;"></canvas>
                 <form id="imageForm" action="{{ url_for('predict') }}" method="post">
                     <input type="hidden" name="image" id="imageData">
-                    <button type="button" class="btn btn-secondary btn-block" onclick="takePicture()">Take Image</button>
+                    <button type="button" id="takePicture" class="btn btn-secondary btn-block" onclick="takePicture()" style="display:none;">Take Image</button>
                 </form>
             </div>
         </div>
@@ -64,6 +65,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Processed Image</h5>
                     <img src="data:image/jpeg;base64,{{ output_image }}" alt="Processed Image" class="img-fluid" />
+                    <button id="openCameraAfterProcessing" class="btn btn-success btn-block mt-3" onclick="resetCamera()">Open Camera Again</button>
                 </div>
             </div>
         {% endif %}
@@ -81,17 +83,22 @@
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const constraints = {
-            video: true
-        };
+        const openCameraButton = document.getElementById('openCamera');
+        const takePictureButton = document.getElementById('takePicture');
+        const constraints = { video: true };
 
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then((stream) => {
-                video.srcObject = stream;
-            })
-            .catch((err) => {
-                console.error('Error accessing the camera: ', err);
-            });
+        function openCamera() {
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then((stream) => {
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    takePictureButton.style.display = 'block';
+                    openCameraButton.style.display = 'none';
+                })
+                .catch((err) => {
+                    console.error('Error accessing the camera: ', err);
+                });
+        }
 
         function takePicture() {
             const context = canvas.getContext('2d');
@@ -116,14 +123,15 @@
             }, 'image/png');
         }
 
-        function resizeCanvas() {
-            const containerWidth = document.querySelector('.card-body').offsetWidth;
-            canvas.width = containerWidth;
-            canvas.height = containerWidth * (video.videoHeight / video.videoWidth);
+        function resetCamera() {
+            video.style.display = 'none';
+            canvas.style.display = 'none';
+            openCameraButton.style.display = 'block';
+            takePictureButton.style.display = 'none';
+            document.getElementById('openCameraAfterProcessing').style.display = 'none';
         }
 
-        window.addEventListener('resize', resizeCanvas);
-        video.addEventListener('loadedmetadata', resizeCanvas);
+        openCameraButton.addEventListener('click', openCamera);
     </script>
 </body>
 </html>
