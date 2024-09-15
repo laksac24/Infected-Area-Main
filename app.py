@@ -1,8 +1,11 @@
 import cv2
+import numpy as np
 from functions import YOLO_Pred
-from flask import Flask,render_template,request
+from flask import Flask, render_template, request
 from functions2 import YOLO_Pred2
 import pandas as pd
+import base64
+
 
 app=Flask(__name__)
 
@@ -13,17 +16,18 @@ yolo2=YOLO_Pred2('./Model2/weights/best.onnx','data.yaml')
 def index():
     return render_template("index4.html")
 
-@app.route("/predict",methods=['GET','POST'])
+@app.route("/predict", methods=['GET', 'POST'])
 def predict():
-    image=request.form.get('image')
-    img = cv2.imread(image)
-    img_pred = yolo.predictions(img)
-    def output(main_img):
-
-        cv2.imshow('predictions',main_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-    return render_template("index4.html",output_image=output(img_pred))
+    if request.method == 'POST':
+        image = request.files.get('image')
+        print(image)
+        if image:
+            img = cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_COLOR)
+            img_pred = yolo.predictions(img)
+            _, img_encoded = cv2.imencode('.jpg', img_pred)
+            img_base64 = base64.b64encode(img_encoded).decode('utf-8')
+            return render_template("index4.html", output_image=img_base64)
+    return render_template("index4.html")
 
 @app.route("/predict2",methods=['GET','POST'])
 def predict2():

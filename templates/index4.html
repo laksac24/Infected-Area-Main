@@ -78,7 +78,7 @@
       <form
         action="{{url_for('predict')}}"
         method="post"
-
+      enctype="multipart/form-data"
       >
         <div class="form-group">
           <label for="image">Upload your Image:</label>
@@ -88,7 +88,11 @@
       </form>
 
       <!-- Display the processed image -->
-      <div class="output-image">{{output_image}}</div>
+      {% if output_image %}
+      <div class="output-image">
+          <img src="data:image/jpeg;base64,{{ output_image }}" alt="Processed Image" />
+      </div>
+      {% endif %}
 
       <!-- Take Image using Camera -->
       <form action="{{url_for('predict2')}}" method="get" class="mt-3">
